@@ -1,0 +1,66 @@
+import java.util.Scanner;
+
+public class Solution {
+
+    public static boolean canWin(int leap, int[] game) {
+        return canWinFromPosition(0, leap, game);
+    }
+
+    private static boolean canWinFromPosition(int position, int leap, int[] game) {
+        int n = game.length;
+
+        // If position is outside the array, you win
+        if (position >= n) {
+            return true;
+        }
+
+        // If position is invalid or cell is 1 (blocked), can't move here
+        if (position < 0 || game[position] == 1) {
+            return false;
+        }
+
+        // Mark this position as visited by setting it to 1 to avoid cycles
+        game[position] = 1;
+
+        // Try all three possible moves:
+        // 1. Move forward by 1
+        // 2. Move backward by 1
+        // 3. Jump forward by leap
+
+        // Move forward by 1
+        if (canWinFromPosition(position + 1, leap, game)) {
+            return true;
+        }
+        // Jump forward by leap
+        if (canWinFromPosition(position + leap, leap, game)) {
+            return true;
+        }
+        // Move backward by 1
+        if (canWinFromPosition(position - 1, leap, game)) {
+            return true;
+        }
+
+        // No way to win from this position
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int queries = scanner.nextInt();
+
+        for (int i = 0; i < queries; i++) {
+            int n = scanner.nextInt();
+            int leap = scanner.nextInt();
+
+            int[] game = new int[n];
+            for (int j = 0; j < n; j++) {
+                game[j] = scanner.nextInt();
+            }
+
+            System.out.println(canWin(leap, game) ? "YES" : "NO");
+        }
+
+        scanner.close();
+    }
+}
